@@ -115,7 +115,7 @@ stages:
 
 
 - stage: CDStage
-  displayName: CD for Prod Env
+  displayName: CD for Stage Env
   
 
   jobs:
@@ -162,7 +162,7 @@ stages:
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
               containers: |
-                $(containerRegistryStage).azurecr.io/$(imageName):$(Build.BuildId)
+                acrstage686542000.azurecr.io/myapp:$(Build.BuildId)
               
 
 - stage: CDProd
@@ -171,7 +171,7 @@ stages:
 
   jobs:
   - deployment: Deploy
-    displayName: Deploy to Stage Environment
+    displayName: Deploy to Prod Environment
     pool:
       vmImage: $(vmImageName)
     environment: 'myapp-aks-prod.default'
@@ -213,4 +213,4 @@ stages:
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
               containers: |
-                $(containerRegistryProd).azurecr.io/$(imageName):$(Build.BuildId)
+                acrprod686542000/myapp:$(Build.BuildId)
