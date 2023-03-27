@@ -108,7 +108,8 @@ stages:
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
-              containers: '$(containerRegistryDev).azurecr.io/$(imageName):$(Build.BuildId)'
+              containers: |
+                $(containerRegistryDev).azurecr.io/$(imageName):$(Build.BuildId)
             
 
 
@@ -160,7 +161,8 @@ stages:
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
-              containers: '$(containerRegistryStage).azurecr.io/$(imageName):$(Build.BuildId)'
+              containers: |
+                $(containerRegistryStage).azurecr.io/$(imageName):$(Build.BuildId)
               
 
 - stage: CDProd
@@ -210,4 +212,5 @@ stages:
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
-              containers: '$(containerRegistryProd).azurecr.io/$(imageName):$(Build.BuildId)'
+              containers: |
+                $(containerRegistryProd).azurecr.io/$(imageName):$(Build.BuildId)
