@@ -104,6 +104,7 @@ stages:
             inputs:
               action: deploy
               kubernetesServiceConnection: 'myapp-aks-dev-aks-dev-686542000-default-1679953547632'
+              namespace: default
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
@@ -155,6 +156,7 @@ stages:
             inputs:
               action: deploy
               kubernetesServiceConnection: 'myapp-aks-stage-aks-staging-686542000-default-1679953945232'
+              namespace: default
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
@@ -204,6 +206,7 @@ stages:
             inputs:
               action: deploy
               kubernetesServiceConnection: 'myapps-aks-prod-aks-prod-686542000-default-1679953972046'
+              namespace: default
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
