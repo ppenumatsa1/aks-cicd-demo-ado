@@ -102,11 +102,11 @@ stages:
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
-              action: deploy
+              action: 'deploy'
               manifests: |
-                $(Pipeline.Workspace)/manifests/deployment.yml
-                $(Pipeline.Workspace)/manifests/service.yml
-              containers: $(containerRegistryDev).azurecr.io/$(imageName):$(Build.BuildId)
+                '$(Pipeline.Workspace)/manifests/deployment.yml'
+                '$(Pipeline.Workspace)/manifests/service.yml'
+              containers: '$(containerRegistryDev).azurecr.io/$(imageName):$(Build.BuildId)'
             
 
 
@@ -152,11 +152,11 @@ stages:
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
-              action: deploy
+              action: 'deploy'
               manifests: |
-                $(Pipeline.Workspace)/manifests/deployment.yml
-                $(Pipeline.Workspace)/manifests/service.yml
-              containers: $(containerRegistryStage).azurecr.io/$(imageName):$(Build.BuildId)
+                '$(Pipeline.Workspace)/manifests/deployment.yml'
+                '$(Pipeline.Workspace)/manifests/service.yml'
+              containers: '$(containerRegistryStage).azurecr.io/$(imageName):$(Build.BuildId)'
               
 
 - stage: CDProd
@@ -200,8 +200,8 @@ stages:
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
-              action: deploy
+              action: 'deploy'
               manifests: |
-                $(Pipeline.Workspace)/manifests/deployment.yml
-                $(Pipeline.Workspace)/manifests/service.yml
-              containers: $(containerRegistryProd).azurecr.io/$(imageName):$(Build.BuildId)
+                '$(Pipeline.Workspace)/manifests/deployment.yml'
+                '$(Pipeline.Workspace)/manifests/service.yml'
+              containers: '$(containerRegistryProd).azurecr.io/$(imageName):$(Build.BuildId)'
