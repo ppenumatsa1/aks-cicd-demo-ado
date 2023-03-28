@@ -70,7 +70,7 @@ stages:
     displayName: Deploy to Dev Environment
     pool:
       vmImage: $(vmImageName)
-    environment: 'myapp-aks-dev.default'
+    environment: 'aks-dev-686542000.default'
     strategy:
       runOnce:
         deploy:
@@ -103,7 +103,7 @@ stages:
             displayName: Deploy to Kubernetes cluster
             inputs:
               action: deploy
-              kubernetesServiceConnection: 'myapp-aks-dev-aks-dev-686542000-default-1679953547632'
+              kubernetesServiceConnection: 'aks-dev-686542000-aks-dev-686542000-default-1679961123546'
               namespace: default
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
@@ -123,7 +123,7 @@ stages:
     displayName: Deploy to Stage Environment
     pool:
       vmImage: $(vmImageName)
-    environment: 'myapp-aks-stage.default'
+    environment: 'aks-staging-686542000.default'
     strategy:
       runOnce:
         deploy:
@@ -156,13 +156,13 @@ stages:
             displayName: Deploy to Kubernetes cluster
             inputs:
               action: deploy
-              kubernetesServiceConnection: 'myapp-aks-stage-aks-staging-686542000-default-1679953945232'
+              kubernetesServiceConnection: 'aks-staging-686542000-aks-staging-686542000-default-1679961179082'
               namespace: default
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
               containers: |
-                acrstage686542000.azurecr.io/myapp:$(Build.BuildId)
+                $(containerRegistryStage).azurecr.io/$(imageName):$(Build.BuildId)
               
 
 - stage: CDProd
@@ -174,7 +174,7 @@ stages:
     displayName: Deploy to Prod Environment
     pool:
       vmImage: $(vmImageName)
-    environment: 'myapp-aks-prod.default'
+    environment: 'aks-prod-686542000.default'
     strategy:
       runOnce:
         deploy:
@@ -207,10 +207,10 @@ stages:
             displayName: Deploy to Kubernetes cluster
             inputs:
               action: deploy
-              kubernetesServiceConnection: 'myapps-aks-prod-aks-prod-686542000-default-1679953972046'
+              kubernetesServiceConnection: 'aks-prod-686542000-aks-prod-686542000-default-1679961212916'
               namespace: default
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
               containers: |
-                acrprod686542000/myapp:$(Build.BuildId)
+                $(containerRegistryProd).azurecr.io/$(imageName):$(Build.BuildId)
