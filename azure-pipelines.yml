@@ -101,8 +101,8 @@ stages:
           - task: Docker@2
             displayName: Push Image to Dev ACR
             inputs:
-              containerRegistry: '$(containerRegistryDev)'
-              repository: '$(imageName)'
+              containerRegistry: $(containerRegistryDev)
+              repository: $(imageName)
               command: push
               tags: $(Build.BuildId)
 
@@ -111,9 +111,9 @@ stages:
               action: 'createSecret'
               #kubernetesServiceConnection: 'aks-dev-686542000-aks-dev-686542000-default-1679961123546'
               #namespace: 'default'
-              secretType: 'dockerRegistry'
-              #secretName: '$(imagePullSecretDev)'
-              dockerRegistryEndpoint: '$(containerRegistryDev)'
+              #secretType: 'dockerRegistry'
+              secretName: $(imagePullSecretDev)
+              dockerRegistryEndpoint: $(containerRegistryDev)
 
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
@@ -155,8 +155,8 @@ stages:
           - task: Docker@2
             displayName: ReTag Image with ACR Name - BuildId
             inputs:
-              containerRegistry: '$(containerRegistryStage)'
-              repository: '$(imageName)'
+              containerRegistry: $(containerRegistryStage)
+              repository: $(imageName)
               command: tag
               arguments: '$(imageName):$(Build.BuildId)  $(acrtesturl)/$(imageName):$(Build.BuildId)'
 
@@ -164,8 +164,8 @@ stages:
           - task: Docker@2
             displayName: Push Image to Stage ACR
             inputs:
-              containerRegistry: '$(containerRegistryStage)'
-              repository: '$(imageName)'
+              containerRegistry: $(containerRegistryStage)
+              repository: $(imageName)
               command: push
               tags: $(Build.BuildId)
 
@@ -173,10 +173,10 @@ stages:
             inputs:
               action: 'createSecret'
               #kubernetesServiceConnection: 'aks-staging-686542000-aks-staging-686542000-default-1679961179082'
-              ##namespace: 'default'
-              secretType: 'dockerRegistry'
-              secretName: '$(imagePullSecretStage)'
-              dockerRegistryEndpoint: '$(containerRegistryStage)'
+              #namespace: 'default'
+              #secretType: 'dockerRegistry'
+              secretName: $(imagePullSecretStage)
+              dockerRegistryEndpoint: $(containerRegistryStage)
           
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
@@ -216,8 +216,8 @@ stages:
           - task: Docker@2
             displayName: ReTag Image with ACR Name - BuildId
             inputs:
-              containerRegistry: '$(containerRegistryProd)'
-              repository: '$(imageName)'
+              containerRegistry: $(containerRegistryProd)
+              repository: $(imageName)
               command: tag
               arguments: '$(imageName):$(Build.BuildId)  $(acrprodurl)/$(imageName):$(Build.BuildId)'
 
@@ -225,8 +225,8 @@ stages:
           - task: Docker@2
             displayName: Push Image to Stage ACR
             inputs:
-              containerRegistry: '$(containerRegistryProd)'
-              repository: '$(imageName)'
+              containerRegistry: $(containerRegistryProd)
+              repository: $(imageName)
               command: push
               tags: $(Build.BuildId)
 
