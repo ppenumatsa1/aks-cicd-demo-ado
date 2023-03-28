@@ -20,6 +20,10 @@ variables:
   acrdevurl: 'acrdev686542000.azurecr.io'
   acrtesturl: 'acrstage686542000.azurecr.io'
   acrprodurl: 'acrprod686542000.azurecr.io'
+
+  imagePullSecretDev: 'acrdev686542000dev-auth'
+  imagePullSecretStage: 'acrstage686542000stage-auth'
+  imagePullSecretProd: 'acrprod686542000prod-auth'
  
 
   # Agent VM image name
@@ -102,6 +106,14 @@ stages:
               command: push
               tags: $(Build.BuildId)
 
+          - task: KubernetesManifest@0
+            inputs:
+              action: 'createSecret'
+              kubernetesServiceConnection: 'aks-dev-686542000-aks-dev-686542000-default-1679961123546'
+              namespace: 'default'
+              secretType: 'dockerRegistry'
+              secretName: '$(imagePullSecretDev)'
+              dockerRegistryEndpoint: 'acrdev686542000'
 
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
@@ -112,6 +124,8 @@ stages:
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
+              imagePullSecrets: |
+                $(imagePullSecretDev)
               containers: |
                 $(acrdevurl)/$(imageName):$(Build.BuildId)
             
@@ -155,7 +169,15 @@ stages:
               command: push
               tags: $(Build.BuildId)
 
-
+          - task: KubernetesManifest@0
+            inputs:
+              action: 'createSecret'
+              kubernetesServiceConnection: 'aks-staging-686542000-aks-staging-686542000-default-1679961179082'
+              namespace: 'default'
+              secretType: 'dockerRegistry'
+              secretName: '$(imagePullSecretStage)'
+              dockerRegistryEndpoint: 'acrstage686542000'
+          
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
@@ -165,6 +187,8 @@ stages:
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
+              imagePullSecrets: |
+                $(imagePullSecretStage)
               containers: |
                 $(acrtesturl)/$(imageName):$(Build.BuildId)
               
