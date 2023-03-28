@@ -16,6 +16,10 @@ variables:
   containerRegistryStage: 'acrstage686542000'
   containerRegistryProd: 'acrprod686542000'
   dockerfilePath: '**/Dockerfile'
+
+  acrdevurl: 'acrdev686542000.azurecr.io'
+  acrtesturl: 'acrstage686542000.azurecr.io'
+  acrprodurl: 'acrprod686542000.azurecr.io'
  
 
   # Agent VM image name
@@ -87,7 +91,7 @@ stages:
               containerRegistry: '$(containerRegistryDev)'
               repository: '$(imageName)'
               command: tag
-              arguments: '$(imageName):$(Build.BuildId)  $(containerRegistryDev).azurecr.io/$(imageName):$(Build.BuildId)'
+              arguments: '$(imageName):$(Build.BuildId)  $(containerRegistryDev)/$(imageName):$(Build.BuildId)'
 
 
           - task: Docker@2
@@ -109,7 +113,7 @@ stages:
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
               containers: |
-                $(containerRegistryDev).azurecr.io/$(imageName):$(Build.BuildId)
+                $(acrdevurl)/$(imageName):$(Build.BuildId)
             
 
 
@@ -140,7 +144,7 @@ stages:
               containerRegistry: '$(containerRegistryStage)'
               repository: '$(imageName)'
               command: tag
-              arguments: '$(imageName):$(Build.BuildId)  $(containerRegistryStage).azurecr.io/$(imageName):$(Build.BuildId)'
+              arguments: '$(imageName):$(Build.BuildId)  $(containerRegistryStage)/$(imageName):$(Build.BuildId)'
 
 
           - task: Docker@2
@@ -162,7 +166,7 @@ stages:
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
               containers: |
-                $(containerRegistryStage).azurecr.io/$(imageName):$(Build.BuildId)
+                $(acrtesturl)/$(imageName):$(Build.BuildId)
               
 
 - stage: CDProd
@@ -191,7 +195,7 @@ stages:
               containerRegistry: '$(containerRegistryProd)'
               repository: '$(imageName)'
               command: tag
-              arguments: '$(imageName):$(Build.BuildId)  $(containerRegistryProd).azurecr.io/$(imageName):$(Build.BuildId)'
+              arguments: '$(imageName):$(Build.BuildId)  $(containerRegistryProd)/$(imageName):$(Build.BuildId)'
 
 
           - task: Docker@2
@@ -213,4 +217,4 @@ stages:
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
               containers: |
-                $(containerRegistryProd).azurecr.io/$(imageName):$(Build.BuildId)
+                $(acrprodurl)/$(imageName):$(Build.BuildId)
