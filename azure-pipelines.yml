@@ -91,7 +91,7 @@ stages:
               containerRegistry: '$(containerRegistryDev)'
               repository: '$(imageName)'
               command: tag
-              arguments: '$(imageName):$(Build.BuildId)  $(containerRegistryDev)/$(imageName):$(Build.BuildId)'
+              arguments: '$(imageName):$(Build.BuildId)  $(acrdevurl)/$(imageName):$(Build.BuildId)'
 
 
           - task: Docker@2
@@ -144,7 +144,7 @@ stages:
               containerRegistry: '$(containerRegistryStage)'
               repository: '$(imageName)'
               command: tag
-              arguments: '$(imageName):$(Build.BuildId)  $(containerRegistryStage)/$(imageName):$(Build.BuildId)'
+              arguments: '$(imageName):$(Build.BuildId)  $(acrtesturl)/$(imageName):$(Build.BuildId)'
 
 
           - task: Docker@2
@@ -195,7 +195,7 @@ stages:
               containerRegistry: '$(containerRegistryProd)'
               repository: '$(imageName)'
               command: tag
-              arguments: '$(imageName):$(Build.BuildId)  $(containerRegistryProd)/$(imageName):$(Build.BuildId)'
+              arguments: '$(imageName):$(Build.BuildId)  $(acrprodurl)/$(imageName):$(Build.BuildId)'
 
 
           - task: Docker@2
