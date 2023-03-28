@@ -190,7 +190,7 @@ stages:
               imagePullSecrets: |
                 $(imagePullSecretStage)
               containers: |
-                $(acrtesturl)/$(imageName):$(Build.BuildId)
+                'acrstage686542000.azurecr.io/myapp:$(Build.BuildId)'
               
 
 - stage: CDProd
@@ -229,6 +229,15 @@ stages:
               repository: $(imageName)
               command: push
               tags: $(Build.BuildId)
+          
+          - task: KubernetesManifest@0
+            inputs:
+              action: 'createSecret'
+              #kubernetesServiceConnection: 'aks-staging-686542000-aks-staging-686542000-default-1679961179082'
+              #namespace: 'default'
+              #secretType: 'dockerRegistry'
+              secretName: $(imagePullSecretStage)
+              dockerRegistryEndpoint: $(containerRegistryProd)
 
 
           - task: KubernetesManifest@0
@@ -240,5 +249,7 @@ stages:
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
+              imagePullSecrets: |
+                $(imagePullSecretStage)
               containers: |
-                $(acrprodurl)/$(imageName):$(Build.BuildId)
+                'acrprod686542000.azurecr.io/myapp:$(Build.BuildId)'
