@@ -12,18 +12,18 @@ resources:
 variables:
 
   imageName: 'myapp'  
-  containerRegistryDev: 'acrdev686542000'
-  containerRegistryStage: 'acrstage686542000'
-  containerRegistryProd: 'acrprod686542000'
+  containerRegistryDev: 'sc-acrdev51693164'
+  containerRegistryStage: 'sc-acrstage51693164'
+  containerRegistryProd: 'sc-acrprod51693164'
   dockerfilePath: '**/Dockerfile'
 
-  acrdevurl: 'acrdev686542000.azurecr.io'
-  acrtesturl: 'acrstage686542000.azurecr.io'
-  acrprodurl: 'acrprod686542000.azurecr.io'
+  acrdevurl: 'acrdev51693164.azurecr.io'
+  acrstageurl: 'acrstage51693164.azurecr.io'
+  acrprodurl: 'acrprod51693164.azurecr.io'
 
-  imagePullSecretDev: 'acrdev686542000dev-auth'
-  imagePullSecretStage: 'acrstage686542000stage-auth'
-  imagePullSecretProd: 'acrprod686542000prod-auth'
+  imagePullSecretDev: 'acrdev51693164dev-auth'
+  imagePullSecretStage: 'acrstage51693164stage-auth'
+  imagePullSecretProd: 'acrprod51693164prod-auth'
  
 
   # Agent VM image name
@@ -78,7 +78,7 @@ stages:
     displayName: Deploy to Dev Environment
     pool:
       vmImage: $(vmImageName)
-    environment: 'aks-dev-686542000.default'
+    environment: 'env-aks-dev-51693164.default'
     strategy:
       runOnce:
         deploy:
@@ -141,7 +141,7 @@ stages:
     displayName: Deploy to Stage Environment
     pool:
       vmImage: $(vmImageName)
-    environment: 'aks-staging-686542000.default'
+    environment: 'env-aks-staging-51693164.default'
     strategy:
       runOnce:
         deploy:
@@ -158,7 +158,7 @@ stages:
               containerRegistry: $(containerRegistryStage)
               repository: $(imageName)
               command: tag
-              arguments: '$(imageName):$(Build.BuildId)  $(acrtesturl)/$(imageName):$(Build.BuildId)'
+              arguments: '$(imageName):$(Build.BuildId)  $(acrstageurl)/$(imageName):$(Build.BuildId)'
 
 
           - task: Docker@2
@@ -190,7 +190,7 @@ stages:
               imagePullSecrets: |
                 $(imagePullSecretStage)
               containers: |
-                'acrstage686542000.azurecr.io/myapp:$(Build.BuildId)'
+                '$(acrstageurl)/$(imageName):$(Build.BuildId)'
               
 
 - stage: CDProd
@@ -202,7 +202,7 @@ stages:
     displayName: Deploy to Prod Environment
     pool:
       vmImage: $(vmImageName)
-    environment: 'aks-prod-686542000.default'
+    environment: 'env-aks-prod-51693164.default'
     strategy:
       runOnce:
         deploy:
@@ -244,12 +244,12 @@ stages:
             displayName: Deploy to Kubernetes cluster
             inputs:
               action: deploy
-              kubernetesServiceConnection: 'aks-prod-686542000-aks-prod-686542000-default-1679961212916'
-              namespace: default
+              #kubernetesServiceConnection: 'aks-prod-686542000-aks-prod-686542000-default-1679961212916'
+              #namespace: default
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
               imagePullSecrets: |
                 $(imagePullSecretStage)
               containers: |
-                'acrprod686542000.azurecr.io/myapp:$(Build.BuildId)'
+                '$(acrprodurl)/$(imageName):$(Build.BuildId)'
