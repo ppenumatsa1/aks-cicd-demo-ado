@@ -112,8 +112,8 @@ stages:
               #kubernetesServiceConnection: 'aks-dev-686542000-aks-dev-686542000-default-1679961123546'
               #namespace: 'default'
               secretType: 'dockerRegistry'
-              secretName: '$(imagePullSecretDev)'
-              dockerRegistryEndpoint: 'acrdev686542000'
+              #secretName: '$(imagePullSecretDev)'
+              dockerRegistryEndpoint: '$(containerRegistryDev)'
 
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
@@ -137,7 +137,7 @@ stages:
   
 
   jobs:
-  - deployment: Deploy
+  - deployment: DeployStage
     displayName: Deploy to Stage Environment
     pool:
       vmImage: $(vmImageName)
@@ -176,7 +176,7 @@ stages:
               ##namespace: 'default'
               secretType: 'dockerRegistry'
               secretName: '$(imagePullSecretStage)'
-              dockerRegistryEndpoint: 'acrstage686542000'
+              dockerRegistryEndpoint: '$(containerRegistryStage)'
           
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
@@ -198,7 +198,7 @@ stages:
   
 
   jobs:
-  - deployment: Deploy
+  - deployment: DeployProd
     displayName: Deploy to Prod Environment
     pool:
       vmImage: $(vmImageName)
