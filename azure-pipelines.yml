@@ -57,15 +57,18 @@ stages:
 
 
     - task: PublishPipelineArtifact@1
-      displayName: Publish Pipeline Artifact
+      displayName: Publish Image Artifact
       inputs:
         targetPath: '$(Pipeline.Workspace)'
         artifact: 'ContainerImage'
         publishLocation: 'pipeline'
       
-    - upload: manifests
-      artifact: manifests
-    
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Manifest files
+      inputs:
+        targetPath: '$(Pipeline.Workspace)'
+        artifact: 'manifests'
+        publishLocation: 'pipeline'
 
 
 
