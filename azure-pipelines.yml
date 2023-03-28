@@ -66,7 +66,7 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: Publish Manifest files
       inputs:
-        targetPath: '$(Pipeline.Workspace)/manifests/**/*.yml'
+        targetPath: '$(Pipeline.Workspace)/**/manifests/*.yml'
         artifact: 'manifests'
         publishLocation: 'pipeline'
 
