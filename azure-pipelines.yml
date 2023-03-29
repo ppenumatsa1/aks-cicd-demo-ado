@@ -17,9 +17,9 @@ variables:
   containerRegistryProd: 'sc-acrprod51693164'
   dockerfilePath: '**/Dockerfile'
 
-  acrdevurl: 'acrdev51693164.azurecr.io/myapp'
-  acrstageurl: 'acrstage51693164.azurecr.io/myapp'
-  acrprodurl: 'acrprod51693164.azurecr.io/myapp'
+  acrdevurl: 'acrdev51693164.azurecr.io'
+  acrstageurl: 'acrstage51693164.azurecr.io'
+  acrprodurl: 'acrprod51693164.azurecr.io'
 
   imagePullSecretDev: 'acrdev51693164dev-auth'
   imagePullSecretStage: 'acrstage51693164stage-auth'
@@ -63,7 +63,12 @@ stages:
         artifact: 'ContainerImage'
         publishLocation: 'pipeline'
       
-
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Manifest files
+      inputs:
+        targetPath: '$(Pipeline.Workspace)'
+        artifact: 'manifests'
+        publishLocation: 'pipeline'
 
 
 - stage: CDDEV
@@ -92,7 +97,7 @@ stages:
               containerRegistry: '$(containerRegistryDev)'
               repository: '$(imageName)'
               command: tag
-              arguments: '$(imageName):$(Build.BuildId)  $(acrdevurl):$(Build.BuildId)'
+              arguments: '$(imageName):$(Build.BuildId)  $(acrdevurl)/$(imageName):$(Build.BuildId)'
 
 
           - task: Docker@2
@@ -103,14 +108,14 @@ stages:
               command: push
               tags: $(Build.BuildId)
 
-          #- task: KubernetesManifest@0
-          #  inputs:
-          #    action: 'createSecret'
-          #    kubernetesServiceConnection: 'env-aks-dev-51693164-aks-dev-51693164-default-1680032481714'
-          #    namespace: 'default'
-          #    secretType: 'dockerRegistry'
-          #    secretName: $(imagePullSecretDev)
-          #    dockerRegistryEndpoint: $(containerRegistryDev)
+          - task: KubernetesManifest@0
+            inputs:
+              action: createSecret
+              kubernetesServiceConnection: 'env-aks-dev-51693164-aks-dev-51693164-default-1680032481714'
+              namespace: default
+              secretType: dockerRegistry
+              secretName: $(imagePullSecretDev)
+              dockerRegistryEndpoint: $(containerRegistryDev)
 
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
@@ -121,6 +126,8 @@ stages:
               manifests: |
                 $(Pipeline.Workspace)/ContainerImage/s/manifests/deployment.yml
                 $(Pipeline.Workspace)/ContainerImage/s/manifests/service.yml
+              imagePullSecrets: |
+                $(imagePullSecretDev)
               containers: |
                 $(acrdevurl)/$(imageName):$(Build.BuildId)
             
