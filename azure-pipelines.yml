@@ -72,14 +72,14 @@ stages:
   jobs:
   - deployment: Deploy
     displayName: Deploy to Dev Environment
-    pool: 
-      vmImage: $(vmImageName)
-    environment: 'env-aks-dev-51693164.default'
     variables:
     - name: acr-url
       value: $(acrdevurl)
     - name: image-name
       value: $(imageName)
+    pool: 
+      vmImage: $(vmImageName)
+    environment: 'env-aks-dev-51693164.default'
     strategy:
       runOnce:
         deploy:
@@ -123,8 +123,8 @@ stages:
           - task: KubernetesManifest@0
             inputs:
               action: createSecret
-              kubernetesServiceConnection: 'env-aks-dev-51693164-aks-dev-51693164-default-1680032481714'
-              namespace: default
+              #kubernetesServiceConnection: 'env-aks-dev-51693164-aks-dev-51693164-default-1680032481714'
+              #namespace: default
               secretType: dockerRegistry
               secretName: $(imagePullSecretDev)
               dockerRegistryEndpoint: $(containerRegistryDev)
@@ -153,6 +153,11 @@ stages:
   jobs:
   - deployment: DeployStage
     displayName: Deploy to Stage Environment
+    variables:
+    - name: acr-url
+      value: $(acrstageurl)
+    - name: image-name
+      value: $(imageName)
     pool: 
       vmImage: $(vmImageName)
     environment: 'env-aks-staging-51693164.default'
@@ -214,6 +219,11 @@ stages:
   jobs:
   - deployment: DeployProd
     displayName: Deploy to Prod Environment
+    variables:
+    - name: acr-url
+      value: $(acrprodurl)
+    - name: image-name
+      value: $(imageName)
     pool: 
       vmImage: $(vmImageName)
     environment: 'env-aks-prod-51693164.default'
@@ -250,7 +260,7 @@ stages:
               #kubernetesServiceConnection: 'aks-staging-686542000-aks-staging-686542000-default-1679961179082'
               #namespace: 'default'
               #secretType: 'dockerRegistry'
-              secretName: $(imagePullSecretStage)
+              secretName: $(imagePullSecretProd)
               dockerRegistryEndpoint: $(containerRegistryProd)
 
 
@@ -261,9 +271,9 @@ stages:
               #kubernetesServiceConnection: 'aks-prod-686542000-aks-prod-686542000-default-1679961212916'
               #namespace: default
               manifests: |
-                $(Pipeline.Workspace)/manifests/deployment.yml
-                $(Pipeline.Workspace)/manifests/service.yml
+                $(Pipeline.Workspace)/ContainerImage/s/manifests/deployment.yml
+                $(Pipeline.Workspace)/ContainerImage/s/manifests/service.yml
               imagePullSecrets: |
-                $(imagePullSecretStage)
+                $(imagePullSecretProd)
               containers: |
                 '$(acrprodurl)/$(imageName):$(Build.BuildId)'
