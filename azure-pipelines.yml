@@ -4,7 +4,7 @@
 
 trigger:
 - main
-- feature
+
 
 resources:
 - repo: self
@@ -27,7 +27,7 @@ variables:
  
 
   # Agent VM image name
-  #vmImageName: 'ubuntu-latest'
+  vmImageName: 'ubuntu-latest'
 
 
 stages:
@@ -36,8 +36,8 @@ stages:
   jobs:
   - job: Build
     displayName: Build
-    pool: Default
-      #vmImage: $(vmImageName)
+    pool: 
+      vmImage: $(vmImageName)
     steps:
     - task: Docker@2
       displayName: Build Container Image
@@ -63,12 +63,6 @@ stages:
         artifact: 'ContainerImage'
         publishLocation: 'pipeline'
       
-    - task: PublishPipelineArtifact@1
-      displayName: Publish Manifest files
-      inputs:
-        targetPath: '$(Pipeline.Workspace)'
-        artifact: 'manifests'
-        publishLocation: 'pipeline'
 
 
 - stage: CDDEV
@@ -78,8 +72,8 @@ stages:
   jobs:
   - deployment: Deploy
     displayName: Deploy to Dev Environment
-    pool: Default
-      #vmImage: $(vmImageName)
+    pool: 
+      vmImage: $(vmImageName)
     environment: 'env-aks-dev-51693164.default'
     strategy:
       runOnce:
@@ -141,8 +135,8 @@ stages:
   jobs:
   - deployment: DeployStage
     displayName: Deploy to Stage Environment
-    pool: Default
-      #vmImage: $(vmImageName)
+    pool: 
+      vmImage: $(vmImageName)
     environment: 'env-aks-staging-51693164.default'
     strategy:
       runOnce:
@@ -202,8 +196,8 @@ stages:
   jobs:
   - deployment: DeployProd
     displayName: Deploy to Prod Environment
-    pool: Default
-      #vmImage: $(vmImageName)
+    pool: 
+      vmImage: $(vmImageName)
     environment: 'env-aks-prod-51693164.default'
     strategy:
       runOnce:
