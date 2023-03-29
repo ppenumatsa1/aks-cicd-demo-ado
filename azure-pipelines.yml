@@ -27,7 +27,7 @@ variables:
  
 
   # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+  #vmImageName: 'ubuntu-latest'
 
 
 stages:
@@ -79,8 +79,8 @@ stages:
   jobs:
   - deployment: Deploy
     displayName: Deploy to Dev Environment
-    pool:
-      vmImage: $(vmImageName)
+    pool: Default
+      #vmImage: $(vmImageName)
     environment: 'env-aks-dev-51693164.default'
     strategy:
       runOnce:
@@ -142,8 +142,8 @@ stages:
   jobs:
   - deployment: DeployStage
     displayName: Deploy to Stage Environment
-    pool:
-      vmImage: $(vmImageName)
+    pool: Default
+      #vmImage: $(vmImageName)
     environment: 'env-aks-staging-51693164.default'
     strategy:
       runOnce:
@@ -203,8 +203,8 @@ stages:
   jobs:
   - deployment: DeployProd
     displayName: Deploy to Prod Environment
-    pool:
-      vmImage: $(vmImageName)
+    pool: Default
+      #vmImage: $(vmImageName)
     environment: 'env-aks-prod-51693164.default'
     strategy:
       runOnce:
