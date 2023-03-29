@@ -187,7 +187,20 @@ stages:
               repository: $(imageName)
               command: push
               tags: $(Build.BuildId)
-
+            
+          - task: replacetokens@5
+            inputs:
+              rootDirectory: '$(Pipeline.Workspace)/ContainerImage/s/manifests'
+              targetFiles: 'deployment.yml'
+              tokenPattern: 'custom'
+              writeBOM: true
+              actionOnMissing: 'warn'
+              keepToken: false
+              tokenPrefix: __
+              tokenSuffix: __
+              actionOnNoFiles: 'continue'
+              enableTelemetry: true
+            
           - task: KubernetesManifest@0
             inputs:
               action: 'createSecret'
@@ -262,6 +275,19 @@ stages:
               #secretType: 'dockerRegistry'
               secretName: $(imagePullSecretProd)
               dockerRegistryEndpoint: $(containerRegistryProd)
+
+          - task: replacetokens@5
+            inputs:
+              rootDirectory: '$(Pipeline.Workspace)/ContainerImage/s/manifests'
+              targetFiles: 'deployment.yml'
+              tokenPattern: 'custom'
+              writeBOM: true
+              actionOnMissing: 'warn'
+              keepToken: false
+              tokenPrefix: __
+              tokenSuffix: __
+              actionOnNoFiles: 'continue'
+              enableTelemetry: true
 
 
           - task: KubernetesManifest@0
