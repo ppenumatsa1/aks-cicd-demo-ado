@@ -122,11 +122,11 @@ stages:
             displayName: Deploy to Kubernetes cluster
             inputs:
               action: deploy
-              #kubernetesServiceConnection: 'aks-dev-686542000-aks-dev-686542000-default-1679961123546'
-              #namespace: default
+              kubernetesServiceConnection: 'env-aks-dev-51693164-aks-dev-51693164-default-1680032481714'
+              namespace: default
               manifests: |
-                $(Pipeline.Workspace)/manifests/**/deployment.yml
-                $(Pipeline.Workspace)/manifests/**/service.yml
+                $(Pipeline.Workspace)/ContainerImage/s/manifests/deployment.yml
+                $(Pipeline.Workspace)/ContainerImage/s/manifests/service.yml
               imagePullSecrets: |
                 $(imagePullSecretDev)
               containers: |
