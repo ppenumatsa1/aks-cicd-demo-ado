@@ -111,7 +111,7 @@ stages:
             inputs:
               rootDirectory: '$(Pipeline.Workspace)/ContainerImage/s/manifests'
               targetFiles: 'deployment.yml'
-              tokenPattern: 'default'
+              tokenPattern: 'custom'
               writeBOM: true
               actionOnMissing: 'warn'
               keepToken: false
