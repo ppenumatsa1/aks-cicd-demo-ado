@@ -34,8 +34,8 @@ az aks create \
     --node-count 1 \
     --enable-addons monitoring \
     --generate-ssh-keys \
-    --kubernetes-version 1.23.15 \
-    --attach-acr $containerRegistryDev
+    --kubernetes-version 1.23.15 
+
 
 # Create Staging Kubernetes cluster
 echo "Creating staging aks cluster $aksStaging in "$location"..."
@@ -45,8 +45,8 @@ az aks create \
     --node-count 1 \
     --enable-addons monitoring \
     --generate-ssh-keys \
-    --kubernetes-version 1.23.15 \
-    --attach-acr $containerRegistryStage
+    --kubernetes-version 1.23.15 
+
 
 # Create a Kubernetes cluster
 echo "Creating aks Production cluster $aksProd in "$location"..."
@@ -56,8 +56,8 @@ az aks create \
     --node-count 1 \
     --enable-addons monitoring \
     --generate-ssh-keys \
-    --kubernetes-version 1.23.15 \
-    --attach-acr $containerRegistryProd
+    --kubernetes-version 1.23.15
+ 
 
 # Clean up Resource Group
 # echo "Deleting resource group $resourceGroup in "$location"..."
