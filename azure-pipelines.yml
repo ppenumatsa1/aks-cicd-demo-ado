@@ -138,6 +138,8 @@ stages:
               manifests: |
                 $(Pipeline.Workspace)/ContainerImage/s/manifests/deployment.yml
                 $(Pipeline.Workspace)/ContainerImage/s/manifests/service.yml
+              imagePullSecrets: 
+                $(imagePullSecretDev)
               containers: |
                 $(acrdevurl)/$(imageName):$(Build.BuildId)
             
