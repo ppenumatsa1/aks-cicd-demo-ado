@@ -75,6 +75,11 @@ stages:
     pool: 
       vmImage: $(vmImageName)
     environment: 'env-aks-dev-51693164.default'
+    variables:
+    - name: acr-url
+      value: $(acrdevurl)
+    - name: image-name
+      value: $(imageName)
     strategy:
       runOnce:
         deploy:
@@ -101,6 +106,19 @@ stages:
               repository: $(imageName)
               command: push
               tags: $(Build.BuildId)
+          
+          - task: replacetokens@5
+            inputs:
+              rootDirectory: '$(Pipeline.Workspace)/ContainerImage/s/manifests'
+              targetFiles: 'deployment.yml'
+              tokenPattern: 'default'
+              writeBOM: true
+              actionOnMissing: 'warn'
+              keepToken: false
+              tokenPrefix: __
+              tokenSuffix: __
+              actionOnNoFiles: 'continue'
+              enableTelemetry: true
 
           - task: KubernetesManifest@0
             inputs:
