@@ -123,8 +123,8 @@ stages:
           - task: KubernetesManifest@0
             inputs:
               action: createSecret
-              #kubernetesServiceConnection: 'env-aks-dev-51693164-aks-dev-51693164-default-1680032481714'
-              #namespace: default
+              kubernetesServiceConnection: 'env-aks-dev-51693164-aks-dev-51693164-default-1680032481714'
+              namespace: default
               secretType: dockerRegistry
               secretName: $(imagePullSecretDev)
               dockerRegistryEndpoint: $(containerRegistryDev)
@@ -205,8 +205,8 @@ stages:
             inputs:
               action: 'createSecret'
               #kubernetesServiceConnection: 'aks-staging-686542000-aks-staging-686542000-default-1679961179082'
-              #namespace: 'default'
-              #secretType: 'dockerRegistry'
+              namespace: 'default'
+              secretType: 'dockerRegistry'
               secretName: $(imagePullSecretStage)
               dockerRegistryEndpoint: $(containerRegistryStage)
           
@@ -222,7 +222,7 @@ stages:
               imagePullSecrets: |
                 $(imagePullSecretStage)
               containers: |
-                '$(acrstageurl)/$(imageName):$(Build.BuildId)'
+                $(acrstageurl)/$(imageName):$(Build.BuildId)
               
 
 - stage: CDProd
@@ -271,8 +271,8 @@ stages:
             inputs:
               action: 'createSecret'
               #kubernetesServiceConnection: 'aks-staging-686542000-aks-staging-686542000-default-1679961179082'
-              #namespace: 'default'
-              #secretType: 'dockerRegistry'
+              namespace: 'default'
+              secretType: 'dockerRegistry'
               secretName: $(imagePullSecretProd)
               dockerRegistryEndpoint: $(containerRegistryProd)
 
@@ -302,4 +302,4 @@ stages:
               imagePullSecrets: |
                 $(imagePullSecretProd)
               containers: |
-                '$(acrprodurl)/$(imageName):$(Build.BuildId)'
+                $(acrprodurl)/$(imageName):$(Build.BuildId)
