@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: myapp 
-          image: acrnp164034640.azurecr.io/myapp
+          image: __acr-url__/__image-name__
           ports:
           - containerPort: 8080
