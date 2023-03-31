@@ -12,18 +12,22 @@ resources:
 variables:
 
   repoName: 'myapp'  
-  containerRegistryDev: 'sc-acrdev51693164'
-  containerRegistryStage: 'sc-acrstage51693164'
-  containerRegistryProd: 'sc-acrprod51693164'
+  containerRegistryDev: 'sc-acrdev341270475'
+  containerRegistryStage: 'sc-acrstage341270475'
+  containerRegistryProd: 'sc-acrprod341270475'
   dockerfilePath: '**/Dockerfile'
 
-  acrdevurl: 'acrdev51693164.azurecr.io'
-  acrstageurl: 'acrstage51693164.azurecr.io'
-  acrprodurl: 'acrprod51693164.azurecr.io'
+  acrdevurl: 'acrdev341270475.azurecr.io'
+  acrstageurl: 'acrstage341270475.azurecr.io'
+  acrprodurl: 'acrprod341270475.azurecr.io'
 
-  imagePullSecretDev: 'acrdev51693164dev-auth'
-  imagePullSecretStage: 'acrstage51693164stage-auth'
-  imagePullSecretProd: 'acrprod51693164prod-auth'
+  imagePullSecretDev: 'acrdev341270475-auth'
+  imagePullSecretStage: 'acrstage341270475-auth'
+  imagePullSecretProd: 'acrprod341270475-auth'
+
+  envdev: 'env-aks-dev-341270475.default'
+  envstage: 'env-aks-staging-341270475.default'
+  envprod: 'env-aks-prod-341270475.default'
  
   tag: '$(Build.BuildId)'
 
@@ -80,7 +84,7 @@ stages:
       value: $(repoName)
     pool: 
       vmImage: $(vmImageName)
-    environment: 'env-aks-dev-51693164.default'
+    environment: $(envdev)
     strategy:
       runOnce:
         deploy:
@@ -161,7 +165,7 @@ stages:
       value: $(repoName)
     pool: 
       vmImage: $(vmImageName)
-    environment: 'env-aks-staging-51693164.default'
+    environment: $(envstage)
     strategy:
       runOnce:
         deploy:
@@ -240,7 +244,7 @@ stages:
       value: $(repoName)
     pool: 
       vmImage: $(vmImageName)
-    environment: 'env-aks-prod-51693164.default'
+    environment: $(envprod)
     strategy:
       runOnce:
         deploy:
