@@ -10,8 +10,10 @@ resources:
 - repo: self
 
 variables:
-
+  #Repo Named
   repoName: 'myapp'  
+
+  # ACR Registry ADO Service Connections
   containerRegistryDev: 'sc-acrdev341270475'
   containerRegistryStage: 'sc-acrstage341270475'
   containerRegistryProd: 'sc-acrprod341270475'
@@ -25,6 +27,7 @@ variables:
   imagePullSecretStage: 'acrstage341270475-auth'
   imagePullSecretProd: 'acrprod341270475-auth'
 
+  #kubernetes ADO Environments
   envdev: 'env-aks-dev-341270475.default'
   envstage: 'env-aks-staging-341270475.default'
   envprod: 'env-aks-prod-341270475.default'
@@ -112,6 +115,15 @@ stages:
               command: push
               tags: $(tag)
           
+
+          - task: KubernetesManifest@0
+            inputs:
+              action: createSecret
+              namespace: default
+              secretType: dockerRegistry
+              secretName: $(imagePullSecretDev)
+              dockerRegistryEndpoint: $(containerRegistryDev)
+
           - task: replacetokens@5
             inputs:
               rootDirectory: '$(Pipeline.Workspace)/ContainerImage/s/manifests'
@@ -126,20 +138,9 @@ stages:
               enableTelemetry: true
 
           - task: KubernetesManifest@0
-            inputs:
-              action: createSecret
-              kubernetesServiceConnection: 'env-aks-dev-51693164-aks-dev-51693164-default-1680032481714'
-              namespace: default
-              secretType: dockerRegistry
-              secretName: $(imagePullSecretDev)
-              dockerRegistryEndpoint: $(containerRegistryDev)
-
-          - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
               action: deploy
-              #kubernetesServiceConnection: 'env-aks-dev-51693164-aks-dev-51693164-default-1680032481714'
-              #namespace: default
               manifests: |
                 $(Pipeline.Workspace)/ContainerImage/s/manifests/deployment.yml
                 $(Pipeline.Workspace)/ContainerImage/s/manifests/service.yml
@@ -209,7 +210,6 @@ stages:
           - task: KubernetesManifest@0
             inputs:
               action: 'createSecret'
-              #kubernetesServiceConnection: 'aks-staging-686542000-aks-staging-686542000-default-1679961179082'
               namespace: 'default'
               secretType: 'dockerRegistry'
               secretName: $(imagePullSecretStage)
@@ -219,8 +219,6 @@ stages:
             displayName: Deploy to Kubernetes cluster
             inputs:
               action: deploy
-              #kubernetesServiceConnection: 'aks-staging-686542000-aks-staging-686542000-default-1679961179082'
-              #namespace: default
               manifests: |
                 $(Pipeline.Workspace)/ContainerImage/s/manifests/deployment.yml
                 $(Pipeline.Workspace)/ContainerImage/s/manifests/service.yml
@@ -275,7 +273,6 @@ stages:
           - task: KubernetesManifest@0
             inputs:
               action: 'createSecret'
-              #kubernetesServiceConnection: 'aks-staging-686542000-aks-staging-686542000-default-1679961179082'
               namespace: 'default'
               secretType: 'dockerRegistry'
               secretName: $(imagePullSecretProd)
@@ -299,8 +296,6 @@ stages:
             displayName: Deploy to Kubernetes cluster
             inputs:
               action: deploy
-              #kubernetesServiceConnection: 'aks-prod-686542000-aks-prod-686542000-default-1679961212916'
-              #namespace: default
               manifests: |
                 $(Pipeline.Workspace)/ContainerImage/s/manifests/deployment.yml
                 $(Pipeline.Workspace)/ContainerImage/s/manifests/service.yml
